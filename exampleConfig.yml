@@ -1,0 +1,8 @@
+commands:
+  - name: Run Dev Server (port 4000)
+    script: foreman start
+    key: r
+    runOnStart: true
+  - name: Build Prod
+    script: ./build-prod.sh
+    key: p
