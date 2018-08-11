@@ -2,6 +2,8 @@
 
 set -ex
 
+CONFIG_FILE_PATH=$1
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 SESSION_NAME="RUNNER__$(date +%F_%H-%M-%S)"
@@ -11,7 +13,7 @@ tmux send-keys -t ${SESSION_NAME}:.0 'echo "This window is the service runner...
 
 tmux split-window -v
 
-tmux send-keys -t ${SESSION_NAME}:.1 "python3 ${SCRIPT_DIR}/src/Runner.py ${SESSION_NAME}" Enter
+tmux send-keys -t ${SESSION_NAME}:.1 "python3 ${SCRIPT_DIR}/src/Runner.py ${SESSION_NAME} ${CONFIG_FILE_PATH}" Enter
 
 # select python pane
 tmux select-pane -t ${SESSION_NAME}:.1

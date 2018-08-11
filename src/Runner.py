@@ -7,8 +7,9 @@ import time
 import yaml
 
 tmuxSessionName = sys.argv[1]
+configFilePath = sys.argv[2]
 
-config = yaml.load(open('runner.yml', 'r').read())
+config = yaml.load(open(configFilePath, 'r').read())
 
 print(config)
 
@@ -23,7 +24,7 @@ def ctrl_c():
 
 def execute(cmd):
     quote = '\''
-    send_keys('-X cancel')
+    send_keys('-X cancel > /dev/null 2>&1')
     time.sleep(.5)
     ctrl_c()
     send_keys(quote + cmd + quote + ' Enter')
