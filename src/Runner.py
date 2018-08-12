@@ -4,14 +4,19 @@ import sys
 import os
 import readchar
 import time
-import yaml
+
+from Config import Config
 
 tmuxSessionName = sys.argv[1]
 configFilePath = sys.argv[2]
 
-config = yaml.load(open(configFilePath, 'r').read())
+config = Config(configFilePath)
 
-print(config)
+
+class Colors:
+    default = '\033[49m'
+    cyan = '\033[87m'
+
 
 def send_keys(keys):
     pane_number = '0'
@@ -30,14 +35,14 @@ def execute(cmd):
     send_keys(quote + cmd + quote + ' Enter')
 
 
-def print_available_commands(cmds):
-    print('')
-    print('Available commands:')
+def print_available_tasks(tasks):
+    print(Colors.cyan)
+    print('Available tasks:')
     print('1 - scroll up')
     print('2 - scroll down')
-    for cmd in cmds:
-        print(cmd)
-    print('q - quit')
+    for t in tasks:
+        print(t.hotkey + ' - ' + t.name)
+    print('q - quit' + Colors.default)
 
 
 def close_tmux():
@@ -56,32 +61,29 @@ def scroll_down():
     send_keys('-X page-down')
 
 
-availableCommands = []
-for _command in config['commands']:
-    if 'runOnStart' in _command and _command['runOnStart']:
-        execute(_command['script'])
-    availableCommands.append(_command['key'] + ' - ' + _command['name'])
+if config.startupTask:
+    execute(config.startupTask.script)
 
-print_available_commands(availableCommands)
+print_available_tasks(config.tasks)
 
-print('enter command: ', end='')
+print('Choice: ', end='')
 sys.stdout.flush()
 
 while True:
     try:
-        command = readchar.readchar()
+        userInput = readchar.readchar()
+        sys.stdout.flush()
     except KeyboardInterrupt:
         sys.exit(0)
 
-    if command == 'q':
+    if userInput == 'q':
         close_tmux()
         break
-    elif command == '1':
+    elif userInput == '1':
         scroll_up()
-    elif command == '2':
+    elif userInput == '2':
         scroll_down()
     else:
-        for _command in config['commands']:
-            if _command['key'] == command:
-                execute(_command['script'])
-
+        for task in config.tasks:
+            if task.hotkey == userInput:
+                execute(task.script)
