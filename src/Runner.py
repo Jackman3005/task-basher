@@ -18,13 +18,12 @@ class Colors:
     cyan = '\033[87m'
 
 
-def send_keys(keys):
-    pane_number = '0'
+def send_keys(keys, pane_number='0'):
     os.system('tmux send-keys -t ' + tmuxSessionName + ':.' + pane_number + ' ' + keys)
 
 
 def ctrl_c():
-    send_keys('C-c' + ' Enter')
+    send_keys('C-c')
 
 
 def execute(cmd):
@@ -48,7 +47,7 @@ def print_available_tasks(tasks):
 def close_tmux():
     print('Goodbye!')
     ctrl_c()
-    os.system('tmux kill-session -t ' + tmuxSessionName)
+    os.system('TMUX='' tmux attach-session -d')
 
 
 def scroll_up():
@@ -60,6 +59,11 @@ def scroll_down():
     os.system('tmux copy-mode -t ' + tmuxSessionName + ':.0')
     send_keys('-X page-down')
 
+
+send_keys("PS1='$(echo -e \"\e[1m\e[32m\$(date +%H:%M:%S)\e[0m | \e[94mTASK BASHER\e[0m | Executing... \")' Enter")
+send_keys("unset HISTFILE' Enter")
+execute('clear')
+os.system('tmux clear-history -t ' + tmuxSessionName + ':.0')
 
 if config.startupTask:
     execute(config.startupTask.script)

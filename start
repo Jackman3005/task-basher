@@ -7,14 +7,25 @@ CONFIG_FILE_PATH=$1
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 SESSION_NAME="RUNNER__$(date +%F_%H-%M-%S)"
+START_TIME="$(date +%b\ %d\ @\ %H:%M:%S)"
 
 tmux new-session -d -s ${SESSION_NAME}
-tmux send-keys -t ${SESSION_NAME}:.0 'echo "This window is the service runner..."' Enter
-
 tmux split-window -v
 
-tmux send-keys -t ${SESSION_NAME}:.1 "python3 ${SCRIPT_DIR}/src/Runner.py ${SESSION_NAME} ${CONFIG_FILE_PATH}" Enter
+tmux send-keys -t ${SESSION_NAME}:.1 "python3 ${SCRIPT_DIR}/src/Runner.py ${SESSION_NAME} '${CONFIG_FILE_PATH}'" Enter
 
 # select python pane
 tmux select-pane -t ${SESSION_NAME}:.1
 tmux -2 attach-session -d
+
+echo -e "\e[94m"
+echo '####################################################################################'
+echo '#                                                                                  #'
+echo '#                                 TASK BASHER                                      #'
+echo "#                      STARTED ON: $START_TIME                               #"
+echo '#                                                                                  #'
+echo '####################################################################################'
+echo -e "\e[0m"
+tmux capture-pane -t ${SESSION_NAME}:.0 -p -e -S -
+echo -e "\e[94m############################## TASK BASHER ENDED ###################################\e[0m"
+tmux kill-session -t ${SESSION_NAME}
