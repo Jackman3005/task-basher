@@ -3,11 +3,12 @@
 set -e
 
 CONFIG_FILE_PATH=$1
-
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 SESSION_NAME="RUNNER__$(date +%F_%H-%M-%S)"
 START_TIME="$(date +%b\ %d\ @\ %H:%M:%S)"
+
+export HISTFILE=/dev/null
 
 tmux new-session -d -s ${SESSION_NAME}
 tmux split-window -v
