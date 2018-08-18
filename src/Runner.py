@@ -60,6 +60,8 @@ def scroll_down():
     send_keys('-X page-down')
 
 
+os.system('tmux resize-pane -t ' + tmuxSessionName + ':.1 -y 10')
+
 send_keys("PS1='$(echo -e \"\e[1m\e[32m\$(date +%H:%M:%S)\e[0m | \e[94mTASK BASHER\e[0m | Executing... \")' Enter")
 send_keys("unset HISTFILE' Enter")
 execute('clear')
