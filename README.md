@@ -1,6 +1,9 @@
 # Task Basher
 This is a utility program that assists you in running tasks from the terminal.
 
+![alt text](./docs/task-basher-demo-v1.1.gif "Task basher Demo")
+
+
 ## Features
 - Tasks are run from within your native terminal environment
 - Kills tasks using `Ctrl + C`
